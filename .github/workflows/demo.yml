@@ -1,11 +1,28 @@
-name: simple task
-on: push
+name: CI Pipeline
+
+on:
+  push:
+
 jobs:
-  build:
+  checkout:
     runs-on: ubuntu-22.04
     steps:
-      - name: checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: meet and greet
-        run: echo "hi hello welcome to the Github Actions Classes"
+  build:
+    needs: checkout
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "Building..."
+
+  test:
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "Testing..."
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-22.04
+    steps:
+      - run: echo "Deploying..."
