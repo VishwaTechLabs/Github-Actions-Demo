@@ -1,0 +1,11 @@
+name: simple task
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: meet and greet
+        run: echo "hi hello welcome to the Github Actions Classes"
