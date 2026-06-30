@@ -1,28 +1,36 @@
-name: CI Pipeline
+name: Terraform AWS VPC
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
-  checkout:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
+  terraform:
 
-  build:
-    needs: checkout
     runs-on: ubuntu-22.04
-    steps:
-      - run: echo "Building..."
 
-  test:
-    needs: build
-    runs-on: ubuntu-22.04
-    steps:
-      - run: echo "Testing..."
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-south-1
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-22.04
     steps:
-      - run: echo "Deploying..."
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
